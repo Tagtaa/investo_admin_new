@@ -4,10 +4,11 @@ import { Input, Row } from 'reactstrap';
 import { Colxx, Separator } from 'components/common/CustomBootstrap';
 import Breadcrumb from 'containers/navs/Breadcrumb';
 import { NavLink } from 'react-router-dom';
-import AddWithdraw from './modal-form/add-withdraw';
+import {adminRoot} from '../../../constants/defaultValues'
+// import AddOrder from './modal-form/add-order';
 
-const AccountList = ({ match }) => {
-  const [show, setShow] = useState();
+const SecondaryMarketList = ({ match }) => {
+//   const [show, setShow] = useState();
   const [toggle, setToggle] = useState({
     orderBy: { display: 'none' },
     pages: { display: 'none' },
@@ -17,14 +18,15 @@ const AccountList = ({ match }) => {
     <>
       <Row>
         <Colxx xxs="12">
-          <Breadcrumb heading="Withdraw" match={match} />
+          <Breadcrumb heading="Secondary Market" match={match} />
           <div className="top-right-button-container">
+           
             <button
               type="button"
-              onClick={() => setShow(true)}
+            //   onClick={() => setShow(true)}
               className="btn btn-primary btn-lg top-right-button mr-1"
             >
-              WITHDRAW
+           ADD ARTICLE
             </button>
             <div className="btn-group">
               <div className="btn btn-primary btn-lg pl-4 pr-0 check-button">
@@ -57,10 +59,7 @@ const AccountList = ({ match }) => {
               >
                 <span className="sr-only">Toggle Dropdown</span>
               </button>
-              <div
-                className="dropdown-menu dropdown-menu-right"
-                style={toggle.checkAll}
-              >
+              <div className="dropdown-menu dropdown-menu-right" style={toggle.checkAll}>
                 <NavLink className="dropdown-item" to="/abc">
                   Action
                 </NavLink>
@@ -169,7 +168,7 @@ const AccountList = ({ match }) => {
                       </span>
                       <div className="d-block d-md-inline-block">
                         <div className="btn-group float-md-left mr-1 mb-1">
-                          <button
+                        <button
                             className="btn btn-outline-dark btn-xs dropdown-toggle"
                             type="button"
                             data-toggle="dropdown"
@@ -231,13 +230,11 @@ const AccountList = ({ match }) => {
                               };
                             })
                           }
+
                         >
                           20
                         </button>
-                        <div
-                          className="dropdown-menu dropdown-menu-right"
-                          style={toggle.pages}
-                        >
+                        <div className="dropdown-menu dropdown-menu-right" style={toggle.pages}>
                           <NavLink className="dropdown-item" to="/a">
                             10
                           </NavLink>
@@ -261,243 +258,62 @@ const AccountList = ({ match }) => {
               </div>
 
               <div className="row">
-                <div className="w-90 py-3">
-                  <ul className="d-flex justify-content-between">
-                    <li className="li">Image</li>
-                    <li className="li">ID</li>
-                    <li className="li">Date</li>
-                    <li className="li">Customer name</li>
-                    <li className="li">User email</li>
-                    <li className="li">Phone</li>
-                    <li className="li">Bank account type</li>
-                    <li className="li">Bank account</li>
-                    <li className="li">Amount</li>
-                    <li className="li">Status</li>
+              <div className="w-90 py-3">
+                  <ul className='d-flex justify-content-between'>
+                    <li className='li'>Image</li>
+                    <li className='li'>Stock name</li>
+                    <li className='li'>Stock full name</li>
+                    <li className='li'>Date</li>
+                    <li className='li'>Customer name</li>
+                    <li className='li'>User email</li>
+                    <li className='li'>Price</li>
+                    <li className='li'>Quanity</li>
+                    <li className='li'>Total price</li>
+                    <li className='li'>Status</li>
+
                   </ul>
                 </div>
                 <div className="col-12 list" data-check-all="checkAll">
-                  <div className="card d-flex flex-row mb-3">
+                <div className="card d-flex flex-row mb-3">
                     <div className="d-flex flex-grow-1 min-width-zero">
                       <div className="card-body align-self-center d-flex flex-column flex-md-row justify-content-between min-width-zero align-items-md-center">
-                        <p className="mb-0 text-small w-15 u">U</p>
+                      <p className="mb-0 text-small w-15 u">
+                          U
+                        </p>
                         <NavLink
-                          className="list-item-heading mb-0 truncate w-10"
-                          to="/customer-menu/profile"
+                          className="list-item-heading mb-0 truncate w-20"
+                          to={`${adminRoot}/ipo/edit-secondary-market`}
                         >
-                          583
+                  
+                        <span className='ml-2'>ADL</span>
                         </NavLink>
-                        <p className="mb-0 text-muted text-small w-15">
-                          2020/05/20 20:00
+                        <p className="mb-0 text-muted text-small w-25">
+                        Адуун Чулуун ХК 
+                        </p>
+                        <p className="mb-0 text-muted text-small w-20">
+                        2020/05/20 20:00
+                        </p>
+                        <p className="mb-0 text-muted text-small w-20">
+                        Bat Gerel 
                         </p>
                         <p className="mb-0 text-muted text-small w-15">
-                          Bat Gerel
+                        gerel@mail.com 
                         </p>
                         <p className="mb-0 text-muted text-small w-15">
-                          gerel@mail.com
+                        1,274.00₮
                         </p>
                         <p className="mb-0 text-muted text-small w-15">
-                          99887766
+                        15
+                        </p>
+                        <p className="mb-0 text-muted text-small w-20">
+                        1.5%
                         </p>
                         <p className="mb-0 text-muted text-small w-15">
-                          Khan bank
-                        </p>
-                        <p className="mb-0 text-muted text-small w-15">
-                          5050505050
-                        </p>
-                        <p className="mb-0 text-muted text-small w-15">
-                          150.000₮
-                        </p>
-                        <div className="w-15">
-                          <span className="badge badge-pill badge-secondary not-verified w-80">
-                            PROCESSING
-                          </span>
-                        </div>
-                      </div>
-
-                      <div className="custom-control custom-checkbox mb-1 align-self-center pr-4">
-                        <Input
-                          type="checkbox"
-                          className="custom-control-input"
-                        />
-                        <span className="custom-control-label">&nbsp;</span>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="card d-flex flex-row mb-3">
-                    <div className="d-flex flex-grow-1 min-width-zero">
-                      <div className="card-body align-self-center d-flex flex-column flex-md-row justify-content-between min-width-zero align-items-md-center">
-                        <p className="mb-0 text-small w-15 u">U</p>
-                        <NavLink
-                          className="list-item-heading mb-0 truncate w-10"
-                          to="/customer-menu/profile"
-                        >
-                          583
-                        </NavLink>
-                        <p className="mb-0 text-muted text-small w-15">
-                          2020/05/20 20:00
-                        </p>
-                        <p className="mb-0 text-muted text-small w-15">
-                          Bat Gerel
-                        </p>
-                        <p className="mb-0 text-muted text-small w-15">
-                          gerel@mail.com
-                        </p>
-                        <p className="mb-0 text-muted text-small w-15">
-                          99887766
-                        </p>
-                        <p className="mb-0 text-muted text-small w-15">
-                          Khan bank
-                        </p>
-                        <p className="mb-0 text-muted text-small w-15">
-                          5050505050
-                        </p>
-                        <p className="mb-0 text-muted text-small w-15">
-                          150.000₮
-                        </p>
-                        <div className="w-15">
-                          <span className="badge badge-pill badge-secondary delete w-80">
-                            REJECTED
-                          </span>
-                        </div>
-                      </div>
-
-                      <div className="custom-control custom-checkbox mb-1 align-self-center pr-4">
-                        <Input
-                          type="checkbox"
-                          className="custom-control-input"
-                        />
-                        <span className="custom-control-label">&nbsp;</span>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="card d-flex flex-row mb-3">
-                    <div className="d-flex flex-grow-1 min-width-zero">
-                      <div className="card-body align-self-center d-flex flex-column flex-md-row justify-content-between min-width-zero align-items-md-center">
-                        <p className="mb-0 text-small w-15 u">U</p>
-                        <NavLink
-                          className="list-item-heading mb-0 truncate w-10"
-                          to="/customer-menu/profile"
-                        >
-                          583
-                        </NavLink>
-                        <p className="mb-0 text-muted text-small w-15">
-                          2020/05/20 20:00
-                        </p>
-                        <p className="mb-0 text-muted text-small w-15">
-                          Bat Gerel
-                        </p>
-                        <p className="mb-0 text-muted text-small w-15">
-                          gerel@mail.com
-                        </p>
-                        <p className="mb-0 text-muted text-small w-15">
-                          99887766
-                        </p>
-                        <p className="mb-0 text-muted text-small w-15">
-                          Khan bank
-                        </p>
-                        <p className="mb-0 text-muted text-small w-15">
-                          5050505050
-                        </p>
-                        <p className="mb-0 text-muted text-small w-15">
-                          150.000₮
-                        </p>
-                        <div className="w-15">
-                          <span className="badge badge-pill badge-secondary deactivate w-80">
-                            SUPERADMIN
-                          </span>
-                        </div>
-                      </div>
-
-                      <div className="custom-control custom-checkbox mb-1 align-self-center pr-4">
-                        <Input
-                          type="checkbox"
-                          className="custom-control-input"
-                        />
-                        <span className="custom-control-label">&nbsp;</span>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="card d-flex flex-row mb-3">
-                    <div className="d-flex flex-grow-1 min-width-zero">
-                      <div className="card-body align-self-center d-flex flex-column flex-md-row justify-content-between min-width-zero align-items-md-center">
-                        <p className="mb-0 text-small w-15 u">U</p>
-                        <NavLink
-                          className="list-item-heading mb-0 truncate w-10"
-                          to="/customer-menu/profile"
-                        >
-                          583
-                        </NavLink>
-                        <p className="mb-0 text-muted text-small w-15">
-                          2020/05/20 20:00
-                        </p>
-                        <p className="mb-0 text-muted text-small w-15">
-                          Bat Gerel
-                        </p>
-                        <p className="mb-0 text-muted text-small w-15">
-                          gerel@mail.com
-                        </p>
-                        <p className="mb-0 text-muted text-small w-15">
-                          99887766
-                        </p>
-                        <p className="mb-0 text-muted text-small w-15">
-                          Khan bank
-                        </p>
-                        <p className="mb-0 text-muted text-small w-15">
-                          5050505050
-                        </p>
-                        <p className="mb-0 text-muted text-small w-15">
-                          150.000₮
-                        </p>
-                        <div className="w-15">
-                          <span className="badge badge-pill badge-secondary deactivate w-80">
-                            ADMIN
-                          </span>
-                        </div>
-                      </div>
-
-                      <div className="custom-control custom-checkbox mb-1 align-self-center pr-4">
-                        <Input
-                          type="checkbox"
-                          className="custom-control-input"
-                        />
-                        <span className="custom-control-label">&nbsp;</span>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="card d-flex flex-row mb-3">
-                    <div className="d-flex flex-grow-1 min-width-zero">
-                      <div className="card-body align-self-center d-flex flex-column flex-md-row justify-content-between min-width-zero align-items-md-center">
-                        <p className="mb-0 text-small w-15 u">U</p>
-                        <NavLink
-                          className="list-item-heading mb-0 truncate w-10"
-                          to="/customer-menu/profile"
-                        >
-                          583
-                        </NavLink>
-                        <p className="mb-0 text-muted text-small w-15">
-                          2020/05/20 20:00
-                        </p>
-                        <p className="mb-0 text-muted text-small w-15">
-                          Bat Gerel
-                        </p>
-                        <p className="mb-0 text-muted text-small w-15">
-                          gerel@mail.com
-                        </p>
-                        <p className="mb-0 text-muted text-small w-15">
-                          99887766
-                        </p>
-                        <p className="mb-0 text-muted text-small w-15">
-                          Khan bank
-                        </p>
-                        <p className="mb-0 text-muted text-small w-15">
-                          5050505050
-                        </p>
-                        <p className="mb-0 text-muted text-small w-15">
-                          150.000₮
+                        19,110₮
                         </p>
                         <div className="w-15">
                           <span className="badge badge-pill badge-secondary verified w-80">
-                            CONFIRMED
+                          FILLED
                           </span>
                         </div>
                       </div>
@@ -511,6 +327,167 @@ const AccountList = ({ match }) => {
                       </div>
                     </div>
                   </div>
+                  <div className="card d-flex flex-row mb-3">
+                    <div className="d-flex flex-grow-1 min-width-zero">
+                      <div className="card-body align-self-center d-flex flex-column flex-md-row justify-content-between min-width-zero align-items-md-center">
+                      <p className="mb-0 text-small w-15 u">
+                          U
+                        </p>
+                        <NavLink
+                          className="list-item-heading mb-0 truncate w-20"
+                          to='/customer-menu/profile'
+                        >
+                  
+                        <span className='ml-2'>ADL</span>
+                        </NavLink>
+                        <p className="mb-0 text-muted text-small w-25">
+                        Адуун Чулуун ХК 
+                        </p>
+                        <p className="mb-0 text-muted text-small w-20">
+                        2020/05/20 20:00
+                        </p>
+                        <p className="mb-0 text-muted text-small w-20">
+                        Bat Gerel 
+                        </p>
+                        <p className="mb-0 text-muted text-small w-15">
+                        gerel@mail.com 
+                        </p>
+                        <p className="mb-0 text-muted text-small w-15">
+                        1,274.00₮
+                        </p>
+                        <p className="mb-0 text-muted text-small w-15">
+                        15
+                        </p>
+                        <p className="mb-0 text-muted text-small w-20">
+                        1.5%
+                        </p>
+                        <p className="mb-0 text-muted text-small w-15">
+                        19,110₮
+                        </p>
+                        <div className="w-15">
+                          <span className="badge badge-pill badge-secondary delete w-80">
+                          REJECTED
+                          </span>
+                        </div>
+                      </div>
+
+                      <div className="custom-control custom-checkbox mb-1 align-self-center pr-4">
+                        <Input
+                          type="checkbox"
+                          className="custom-control-input"
+                        />
+                        <span className="custom-control-label">&nbsp;</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="card d-flex flex-row mb-3">
+                    <div className="d-flex flex-grow-1 min-width-zero">
+                      <div className="card-body align-self-center d-flex flex-column flex-md-row justify-content-between min-width-zero align-items-md-center">
+                      <p className="mb-0 text-small w-15 u">
+                          U
+                        </p>
+                        <NavLink
+                          className="list-item-heading mb-0 truncate w-20"
+                          to='/customer-menu/profile'
+                        >
+                  
+                        <span className='ml-2'>ADL</span>
+                        </NavLink>
+                        <p className="mb-0 text-muted text-small w-25">
+                        Адуун Чулуун ХК 
+                        </p>
+                        <p className="mb-0 text-muted text-small w-20">
+                        2020/05/20 20:00
+                        </p>
+                        <p className="mb-0 text-muted text-small w-20">
+                        Bat Gerel 
+                        </p>
+                        <p className="mb-0 text-muted text-small w-15">
+                        gerel@mail.com 
+                        </p>
+                        <p className="mb-0 text-muted text-small w-15">
+                        1,274.00₮
+                        </p>
+                        <p className="mb-0 text-muted text-small w-15">
+                        15
+                        </p>
+                        <p className="mb-0 text-muted text-small w-20">
+                        1.5%
+                        </p>
+                        <p className="mb-0 text-muted text-small w-15">
+                        19,110₮
+                        </p>
+                        <div className="w-15">
+                          <span className="badge badge-pill badge-secondary verified w-80">
+                          FILLED
+                          </span>
+                        </div>
+                      </div>
+
+                      <div className="custom-control custom-checkbox mb-1 align-self-center pr-4">
+                        <Input
+                          type="checkbox"
+                          className="custom-control-input"
+                        />
+                        <span className="custom-control-label">&nbsp;</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="card d-flex flex-row mb-3">
+                    <div className="d-flex flex-grow-1 min-width-zero">
+                      <div className="card-body align-self-center d-flex flex-column flex-md-row justify-content-between min-width-zero align-items-md-center">
+                      <p className="mb-0 text-small w-15 u">
+                          U
+                        </p>
+                        <NavLink
+                          className="list-item-heading mb-0 truncate w-20"
+                          to='/customer-menu/profile'
+                        >
+                  
+                        <span className='ml-2'>ADL</span>
+                        </NavLink>
+                        <p className="mb-0 text-muted text-small w-25">
+                        Адуун Чулуун ХК 
+                        </p>
+                        <p className="mb-0 text-muted text-small w-20">
+                        2020/05/20 20:00
+                        </p>
+                        <p className="mb-0 text-muted text-small w-20">
+                        Bat Gerel 
+                        </p>
+                        <p className="mb-0 text-muted text-small w-15">
+                        gerel@mail.com 
+                        </p>
+                        <p className="mb-0 text-muted text-small w-15">
+                        1,274.00₮
+                        </p>
+                        <p className="mb-0 text-muted text-small w-15">
+                        15
+                        </p>
+                        <p className="mb-0 text-muted text-small w-20">
+                        1.5%
+                        </p>
+                        <p className="mb-0 text-muted text-small w-15">
+                        19,110₮
+                        </p>
+                        <div className="w-15">
+                          <span className="badge badge-pill badge-secondary verified w-80">
+                          FILLED
+                          </span>
+                        </div>
+                      </div>
+
+                      <div className="custom-control custom-checkbox mb-1 align-self-center pr-4">
+                        <Input
+                          type="checkbox"
+                          className="custom-control-input"
+                        />
+                        <span className="custom-control-label">&nbsp;</span>
+                      </div>
+                    </div>
+                  </div>
+
+
                   <nav className="mt-4 mb-3">
                     <ul className="pagination justify-content-center mb-0">
                       <li className="page-item ">
@@ -560,8 +537,8 @@ const AccountList = ({ match }) => {
           </section>
         </Colxx>
       </Row>
-      <AddWithdraw show={show} setShow={setShow} />
+      {/* <AddOrder show={show} setShow={setShow}/> */}
     </>
   );
 };
-export default AccountList;
+export default SecondaryMarketList;

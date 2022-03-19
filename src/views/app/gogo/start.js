@@ -86,7 +86,7 @@ const Start = ({ match }) => (
                         <div className="scroll dashboard-logs">
                           <table className="table table-sm table-borderless">
                             <tbody>
-                              <div className="scroll" style={{ height: '18rem' }}>
+                              <div className="scroll">
                                 <PerfectScrollbar
                                   options={{
                                     suppressScrollX: true,
@@ -173,7 +173,7 @@ const Start = ({ match }) => (
                         <div className="scroll dashboard-logs">
                           <table className="table table-sm table-borderless">
                             <tbody>
-                              <div className="scroll" style={{ height: '18rem' }}>
+                              <div className="scroll">
                                 <PerfectScrollbar
                                   options={{
                                     suppressScrollX: true,

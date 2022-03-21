@@ -1,564 +1,210 @@
-import React, { useState } from 'react';
-import { Input, Row } from 'reactstrap';
-// import IntlMessages from 'helpers/IntlMessages';
-import { Colxx, Separator } from 'components/common/CustomBootstrap';
-import Breadcrumb from 'containers/navs/Breadcrumb';
-import { NavLink } from 'react-router-dom';
-import { adminRoot } from 'constants/defaultValues';
-import AddCustomer from './modal-form/add-customer';
-// import {adminRoot} from '../../../constants/defaultValues';
+import React, { useState, useEffect } from 'react';
 
-const CustromerList = ({ match }) => {
-  console.log(match)
-  const [show, setShow] = useState();
-  const [toggle, setToggle] = useState({
-    orderBy: { display: 'none' },
-    pages: { display: 'none' },
-    checkAll: { display: 'none' },
+import axios from 'axios';
 
+import { servicePath } from 'constants/defaultValues';
+
+import ListPageHeading from 'containers/pages/ListPageHeading';
+import AddNewModal from 'containers/pages/AddNewModal';
+import ListPageListing from 'containers/pages/ListPageListing';
+import useMousetrap from 'hooks/use-mousetrap';
+
+const getIndex = (value, arr, prop) => {
+  for (let i = 0; i < arr.length; i += 1) {
+    if (arr[i][prop] === value) {
+      return i;
+    }
+  }
+  return -1;
+};
+
+const apiUrl = `${servicePath}/cakes/paging`;
+
+const orderOptions = [
+  { column: 'title', label: 'Product Name' },
+  { column: 'category', label: 'Category' },
+  { column: 'status', label: 'Status' },
+];
+const pageSizes = [4, 8, 12, 20];
+
+const categories = [
+  { label: 'Cakes', value: 'Cakes', key: 0 },
+  { label: 'Cupcakes', value: 'Cupcakes', key: 1 },
+  { label: 'Desserts', value: 'Desserts', key: 2 },
+];
+
+const DataListPages = ({ match }) => {
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [displayMode, setDisplayMode] = useState('list');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [selectedPageSize, setSelectedPageSize] = useState(8);
+  const [selectedOrderOption, setSelectedOrderOption] = useState({
+    column: 'title',
+    label: 'Product Name',
   });
-  return (
+
+  const [modalOpen, setModalOpen] = useState(false);
+  const [totalItemCount, setTotalItemCount] = useState(0);
+  const [totalPage, setTotalPage] = useState(1);
+  const [search, setSearch] = useState('');
+  const [selectedItems, setSelectedItems] = useState([]);
+  const [items, setItems] = useState([]);
+  const [lastChecked, setLastChecked] = useState(null);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [selectedPageSize, selectedOrderOption]);
+
+  useEffect(() => {
+    async function fetchData() {
+      axios
+        .get(
+          `${apiUrl}?pageSize=${selectedPageSize}&currentPage=${currentPage}&orderBy=${selectedOrderOption.column}&search=${search}`
+        )
+        .then((res) => {
+          return res.data;
+        })
+        .then((data) => {
+          setTotalPage(data.totalPage);
+          setItems(
+            data.data.map((x) => {
+              return { ...x, img: x.img.replace('img/', 'img/products/') };
+            })
+          );
+          setSelectedItems([]);
+          setTotalItemCount(data.totalItem);
+          setIsLoaded(true);
+        });
+    }
+    fetchData();
+  }, [selectedPageSize, currentPage, selectedOrderOption, search]);
+
+  const onCheckItem = (event, id) => {
+    if (
+      event.target.tagName === 'A' ||
+      (event.target.parentElement && event.target.parentElement.tagName === 'A')
+    ) {
+      return true;
+    }
+    if (lastChecked === null) {
+      setLastChecked(id);
+    }
+
+    let selectedList = [...selectedItems];
+    if (selectedList.includes(id)) {
+      selectedList = selectedList.filter((x) => x !== id);
+    } else {
+      selectedList.push(id);
+    }
+    setSelectedItems(selectedList);
+
+    if (event.shiftKey) {
+      let newItems = [...items];
+      const start = getIndex(id, newItems, 'id');
+      const end = getIndex(lastChecked, newItems, 'id');
+      newItems = newItems.slice(Math.min(start, end), Math.max(start, end) + 1);
+      selectedItems.push(
+        ...newItems.map((item) => {
+          return item.id;
+        })
+      );
+      selectedList = Array.from(new Set(selectedItems));
+      setSelectedItems(selectedList);
+    }
+    document.activeElement.blur();
+    return false;
+  };
+
+  const handleChangeSelectAll = (isToggle) => {
+    if (selectedItems.length >= items.length) {
+      if (isToggle) {
+        setSelectedItems([]);
+      }
+    } else {
+      setSelectedItems(items.map((x) => x.id));
+    }
+    document.activeElement.blur();
+    return false;
+  };
+
+  const onContextMenuClick = (e, data) => {
+    console.log('onContextMenuClick - selected items', selectedItems);
+    console.log('onContextMenuClick - action : ', data.action);
+  };
+
+  const onContextMenu = (e, data) => {
+    const clickedProductId = data.data;
+    if (!selectedItems.includes(clickedProductId)) {
+      setSelectedItems([clickedProductId]);
+    }
+
+    return true;
+  };
+
+  useMousetrap(['ctrl+a', 'command+a'], () => {
+    handleChangeSelectAll(false);
+  });
+
+  useMousetrap(['ctrl+d', 'command+d'], () => {
+    setSelectedItems([]);
+    return false;
+  });
+
+  const startIndex = (currentPage - 1) * selectedPageSize;
+  const endIndex = currentPage * selectedPageSize;
+
+  return !isLoaded ? (
+    <div className="loading" />
+  ) : (
     <>
-      <Row>
-        <Colxx xxs="12">
-          <Breadcrumb heading="Customer list" match={match} />
-          <div className="top-right-button-container">
-            <button
-              type="button"
-              onClick={() => setShow(true)}
-              className="btn btn-primary btn-lg top-right-button mr-1"
-            >
-              ADD NEW
-            </button>
-            <div className="btn-group">
-              <div className="btn btn-primary btn-lg pl-4 pr-0 check-button">
-                <div className="custom-control custom-checkbox mb-0 d-inline-block">
-                  <input
-                    type="checkbox"
-                    className="custom-control-input"
-                    id="checkAll"
-                  />
-                  {/* <span className="custom-control-label">&nbsp;</span> */}
-                </div>
-              </div>
-              <button
-                type="button"
-                className="btn btn-lg btn-primary dropdown-toggle dropdown-toggle-split"
-                data-toggle="dropdown"
-                aria-haspopup="true"
-                aria-expanded="false"
-                onClick={() =>
-                  setToggle((prev) => {
-                    return {
-                      ...prev,
-                      checkAll:
-                        toggle.checkAll.display === 'none'
-                          ? { display: 'block' }
-                          : { display: 'none' },
-                    };
-                  })
-                }
-              >
-                <span className="sr-only">Toggle Dropdown</span>
-              </button>
-              <div className="dropdown-menu dropdown-menu-right" style={toggle.checkAll}>
-                <NavLink className="dropdown-item" to="/abc">
-                  Action
-                </NavLink>
-                <NavLink className="dropdown-item" to="/cds">
-                  Another action
-                </NavLink>
-              </div>
-            </div>
-          </div>
-          <Separator className="mb-5" />
-        </Colxx>
-      </Row>
-      <Row>
-        <Colxx xxs="12" className="mb-4">
-          <section>
-            <div className="container-fluid disable-text-selection">
-              <div className="row">
-                <div className="col-12">
-                  <div className="mb-2">
-                    <NavLink
-                      className="btn pt-0 pl-0 d-inline-block d-md-none"
-                      data-toggle="collapse"
-                      to="#displayOptions"
-                      role="button"
-                      aria-expanded="true"
-                      aria-controls="displayOptions"
-                      
-
-                    >
-                      Display Options
-                      <i className="simple-icon-arrow-down align-middle" />
-                    </NavLink>
-                    <div className=" dont-collapse-sm" id="displayOptions">
-                      <span className="mr-3 mb-2 d-inline-block float-md-left">
-                        <NavLink to="#" className="mr-2 view-icon active">
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 19 19"
-                          >
-                            <path
-                              className="view-icon-svg"
-                              d="M17.5,3H.5a.5.5,0,0,1,0-1h17a.5.5,0,0,1,0,1Z"
-                            />
-                            <path
-                              className="view-icon-svg"
-                              d="M17.5,10H.5a.5.5,0,0,1,0-1h17a.5.5,0,0,1,0,1Z"
-                            />
-                            <path
-                              className="view-icon-svg"
-                              d="M17.5,17H.5a.5.5,0,0,1,0-1h17a.5.5,0,0,1,0,1Z"
-                            />
-                          </svg>
-                        </NavLink>
-                        <NavLink to="#" className="mr-2 view-icon">
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 19 19"
-                          >
-                            <path
-                              className="view-icon-svg"
-                              d="M17.5,3H6.5a.5.5,0,0,1,0-1h11a.5.5,0,0,1,0,1Z"
-                            />
-                            <path
-                              className="view-icon-svg"
-                              d="M3,2V3H1V2H3m.12-1H.88A.87.87,0,0,0,0,1.88V3.12A.87.87,0,0,0,.88,4H3.12A.87.87,0,0,0,4,3.12V1.88A.87.87,0,0,0,3.12,1Z"
-                            />
-                            <path
-                              className="view-icon-svg"
-                              d="M3,9v1H1V9H3m.12-1H.88A.87.87,0,0,0,0,8.88v1.24A.87.87,0,0,0,.88,11H3.12A.87.87,0,0,0,4,10.12V8.88A.87.87,0,0,0,3.12,8Z"
-                            />
-                            <path
-                              className="view-icon-svg"
-                              d="M3,16v1H1V16H3m.12-1H.88a.87.87,0,0,0-.88.88v1.24A.87.87,0,0,0,.88,18H3.12A.87.87,0,0,0,4,17.12V15.88A.87.87,0,0,0,3.12,15Z"
-                            />
-                            <path
-                              className="view-icon-svg"
-                              d="M17.5,10H6.5a.5.5,0,0,1,0-1h11a.5.5,0,0,1,0,1Z"
-                            />
-                            <path
-                              className="view-icon-svg"
-                              d="M17.5,17H6.5a.5.5,0,0,1,0-1h11a.5.5,0,0,1,0,1Z"
-                            />
-                          </svg>
-                        </NavLink>
-                        <NavLink to="#" className="mr-2 view-icon">
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 19 19"
-                          >
-                            <path
-                              className="view-icon-svg"
-                              d="M7,2V8H1V2H7m.12-1H.88A.87.87,0,0,0,0,1.88V8.12A.87.87,0,0,0,.88,9H7.12A.87.87,0,0,0,8,8.12V1.88A.87.87,0,0,0,7.12,1Z"
-                            />
-                            <path
-                              className="view-icon-svg"
-                              d="M17,2V8H11V2h6m.12-1H10.88a.87.87,0,0,0-.88.88V8.12a.87.87,0,0,0,.88.88h6.24A.87.87,0,0,0,18,8.12V1.88A.87.87,0,0,0,17.12,1Z"
-                            />
-                            <path
-                              className="view-icon-svg"
-                              d="M7,12v6H1V12H7m.12-1H.88a.87.87,0,0,0-.88.88v6.24A.87.87,0,0,0,.88,19H7.12A.87.87,0,0,0,8,18.12V11.88A.87.87,0,0,0,7.12,11Z"
-                            />
-                            <path
-                              className="view-icon-svg"
-                              d="M17,12v6H11V12h6m.12-1H10.88a.87.87,0,0,0-.88.88v6.24a.87.87,0,0,0,.88.88h6.24a.87.87,0,0,0,.88-.88V11.88a.87.87,0,0,0-.88-.88Z"
-                            />
-                          </svg>
-                        </NavLink>
-                      </span>
-                      <div className="d-block d-md-inline-block">
-                        <div className="btn-group float-md-left mr-1 mb-1">
-                          <button
-                            className="btn btn-outline-dark btn-xs dropdown-toggle"
-                            type="button"
-                            data-toggle="dropdown"
-                            aria-haspopup="true"
-                            aria-expanded="false"
-                            onClick={() =>
-                              setToggle((prev) => {
-                                return {
-                                  ...prev,
-                                  orderBy:
-                                    toggle.orderBy.display === 'none'
-                                      ? { display: 'block' }
-                                      : { display: 'none' },
-                                };
-                              })
-                            }
-                          >
-                            Order By
-                          </button>
-                          <div className="dropdown-menu" style={toggle.orderBy}>
-                            <NavLink className="dropdown-item" to="/action">
-                              Action
-                            </NavLink>
-                            <NavLink
-                              className="dropdown-item"
-                              to="/another-action"
-                            >
-                              Another action
-                            </NavLink>
-                          </div>
-                        </div>
-                        <div className="search-sm calendar-sm d-inline-block float-md-left mr-1 mb-1 align-top">
-                          <form>
-                            <input
-                              className="form-control datepicker"
-                              placeholder="Search by day"
-                            />
-                          </form>
-                        </div>
-                      </div>
-                      <div className="float-md-right">
-                        <span className="text-muted text-small">
-                          Displaying 1-10 of 210 items{' '}
-                        </span>
-                        <button
-                          className="btn btn-outline-dark btn-xs dropdown-toggle"
-                          type="button"
-                          data-toggle="dropdown"
-                          aria-haspopup="true"
-                          aria-expanded="false"
-                          onClick={() =>
-                            setToggle((prev) => {
-                              return {
-                                ...prev,
-                                pages:
-                                  toggle.pages.display === 'none'
-                                    ? { display: 'block' }
-                                    : { display: 'none' },
-                              };
-                            })
-                          }
-
-                        >
-                          20
-                        </button>
-                        <div className="dropdown-menu dropdown-menu-right" style={toggle.pages}>
-                          <NavLink className="dropdown-item" to="/a">
-                            10
-                          </NavLink>
-                          <NavLink className="dropdown-item" to="/b">
-                            20
-                          </NavLink>
-                          <NavLink className="dropdown-item" to="/c">
-                            30
-                          </NavLink>
-                          <NavLink className="dropdown-item" to="/d">
-                            50
-                          </NavLink>
-                          <NavLink className="dropdown-item" to="/e">
-                            100
-                          </NavLink>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="row">
-                <div className="w-90 py-3">
-                  <ul className='d-flex justify-content-between table_head'>
-                    <li className='li'>Image</li>
-                    <li className='li'>Prefix</li>
-                    <li className='li'>First name / Last name</li>
-                    <li className='li'>Email</li>
-                    <li className='li'>Registered date</li>
-                    <li className='li'>National ID</li>
-                    <li className='li'>Bank account</li>
-                    <li className='li'>User balance</li>
-                    <li className='li'>Phone</li>
-                    <li className='li'>Status</li>
-                  </ul>
-                </div>
-                <div className="col-12 list" data-check-all="checkAll">
-                  <div className="card d-flex flex-row mb-3">
-                    <div className="d-flex flex-grow-1 min-width-zero">
-                      <div className="card-body align-self-center d-flex flex-column flex-md-row justify-content-between min-width-zero align-items-md-center">
-                      <p className="mb-0 text-small w-15 u w-xs-100">
-                          U
-                        </p>
-                        <NavLink
-                          className="list-item-heading mb-0 truncate w-40"
-                          to={`${adminRoot}/customer-menu/profile`}
-                        >
-                          56037 <span className='ml-5'>Bat Gerel</span>
-                        </NavLink>
-                        <p className="mb-0 text-muted text-small w-15 w-xs-100">
-                          gerel@mail.com
-                        </p>
-                        <p className="mb-0 text-muted text-small w-15 w-xs-100">
-                          05/28/2020
-                        </p>
-                        <p className="mb-0 text-muted text-small w-15 w-xs-100">
-                          УШ67172808
-                        </p>
-                        <p className="mb-0 text-muted text-small w-15 w-xs-100">
-                          5011234567
-                        </p>
-                        <p className="mb-0 text-muted text-small w-15 w-xs-100">
-                          1.000.000₮
-                        </p>
-                        <p className="mb-0 text-muted text-small w-15 w-xs-100">
-                          91216778
-                        </p>
-                        <div className="w-15 w-xs-100">
-                          <span className="badge badge-pill badge-secondary not-verified w-85 w-xs-100">
-                            NOT VERIFIED
-                          </span>
-                        </div>
-                      </div>
-
-                      <div className="custom-control custom-checkbox mb-1 align-self-center pr-4">
-                        <Input
-                          type="checkbox"
-                          className="custom-control-input"
-                        />
-                        {/* <span className="custom-control-label">&nbsp;</span> */}
-                      </div>
-                    </div>
-                  </div>
-                  <div className="card d-flex flex-row mb-3">
-                    <div className="d-flex flex-grow-1 min-width-zero">
-                      <div className="card-body align-self-center d-flex flex-column flex-md-row justify-content-between min-width-zero align-items-md-center">
-                      <p className="mb-0 text-small w-15 w-xs-100 u">
-                          U
-                        </p>
-                        <NavLink
-                          className="list-item-heading mb-0 truncate w-30 w-xs-100 ml-1"
-                          to=''
-                        >
-                          56037 <span className='ml-5'>Bat Gerel</span>
-                        </NavLink>
-                        <p className="mb-0 text-muted text-small w-15 w-xs-100">
-                          gerel@mail.com
-                        </p>
-                        <p className="mb-0 text-muted text-small w-15 w-xs-100">
-                          05/28/2020
-                        </p>
-                        <p className="mb-0 text-muted text-small w-15 w-xs-100">
-                          УШ67172808
-                        </p>
-                        <p className="mb-0 text-muted text-small w-15 w-xs-100">
-                          5011234567
-                        </p>
-                        <p className="mb-0 text-muted text-small w-15 w-xs-100">
-                          1.000.000₮
-                        </p>
-                        <p className="mb-0 text-muted text-small w-15 w-xs-100">
-                          91216778
-                        </p>
-                        <div className="w-15 w-xs-100">
-                          <span className="badge badge-pill badge-secondary verified w-85 w-xs-100">
-                            VERIFIED
-                          </span>
-                        </div>
-                      </div>
-
-                      <div className="custom-control custom-checkbox mb-1 align-self-center pr-4">
-                        <Input
-                          type="checkbox"
-                          className="custom-control-input"
-                        />
-                        {/* <span className="custom-control-label">&nbsp;</span> */}
-                      </div>
-                    </div>
-                  </div>
-                  <div className="card d-flex flex-row mb-3">
-                    <div className="d-flex flex-grow-1 min-width-zero">
-                      <div className="card-body align-self-center d-flex flex-column flex-md-row justify-content-between min-width-zero align-items-md-center">
-                      <p className="mb-0 text-small w-15 w-xs-100 u">
-                          U
-                        </p>
-                        <NavLink
-                          className="list-item-heading mb-0 truncate w-30 w-xs-100 ml-1"
-                          to="Pages.Product.Detail.html"
-                        >
-                          56037 <span className='ml-5'>Bat Gerel</span>
-                        </NavLink>
-                        <p className="mb-0 text-muted text-small w-15 w-xs-100">
-                          gerel@mail.com
-                        </p>
-                        <p className="mb-0 text-muted text-small w-15 w-xs-100">
-                          05/28/2020
-                        </p>
-                        <p className="mb-0 text-muted text-small w-15 w-xs-100">
-                          УШ67172808
-                        </p>
-                        <p className="mb-0 text-muted text-small w-15 w-xs-100">
-                          5011234567
-                        </p>
-                        <p className="mb-0 text-muted text-small w-15 w-xs-100">
-                          1.000.000₮
-                        </p>
-                        <p className="mb-0 text-muted text-small w-15 w-xs-100">
-                          91216778
-                        </p>
-                        <div className="w-15 w-xs-100">
-                          <span className="badge badge-pill badge-secondary deactivate w-85 w-xs-100">
-                            DEACTIVATED
-                          </span>
-                        </div>
-                      </div>
-
-                      <div className="custom-control custom-checkbox mb-1 align-self-center pr-4">
-                        <Input
-                          type="checkbox"
-                          className="custom-control-input"
-                        />
-                        {/* <span className="custom-control-label">&nbsp;</span> */}
-                      </div>
-                    </div>
-                  </div>
-                  <div className="card d-flex flex-row mb-3">
-                    <div className="d-flex flex-grow-1 min-width-zero">
-                      <div className="card-body align-self-center d-flex flex-column flex-md-row justify-content-between min-width-zero align-items-md-center">
-                      <p className="mb-0 text-small w-15 w-xs-100 u">
-                          U
-                        </p>
-                        <NavLink
-                          className="list-item-heading mb-0 truncate w-30 w-xs-100 ml-1"
-                          to="Pages.Product.Detail.html"
-                        >
-                          56037 <span className='ml-5'>Bat Gerel</span>
-                        </NavLink>
-                        <p className="mb-0 text-muted text-small w-15 w-xs-100">
-                          gerel@mail.com
-                        </p>
-                        <p className="mb-0 text-muted text-small w-15 w-xs-100">
-                          05/28/2020
-                        </p>
-                        <p className="mb-0 text-muted text-small w-15 w-xs-100">
-                          УШ67172808
-                        </p>
-                        <p className="mb-0 text-muted text-small w-15 w-xs-100">
-                          5011234567
-                        </p>
-                        <p className="mb-0 text-muted text-small w-15 w-xs-100">
-                          1.000.000₮
-                        </p>
-                        <p className="mb-0 text-muted text-small w-15 w-xs-100">
-                          91216778
-                        </p>
-                        <div className="w-15 w-xs-100">
-                          <span className="badge badge-pill badge-secondary delete w-85 w-xs-100">
-                            DELETED
-                          </span>
-                        </div>
-                      </div>
-
-                      <div className="custom-control custom-checkbox mb-1 align-self-center pr-4">
-                        <Input
-                          type="checkbox"
-                          className="custom-control-input"
-                        />
-                        {/* <span className="custom-control-label">&nbsp;</span> */}
-                      </div>
-                    </div>
-                  </div>
-                  <div className="card d-flex flex-row mb-3">
-                    <div className="d-flex flex-grow-1 min-width-zero">
-                      <div className="card-body align-self-center d-flex flex-column flex-md-row justify-content-between min-width-zero align-items-md-center">
-                      <p className="mb-0 text-small w-15 w-xs-100 u">
-                          U
-                        </p>
-                        <NavLink
-                          className="list-item-heading mb-0 truncate w-30 w-xs-100 ml-1"
-                          to="Pages.Product.Detail.html"
-                        >
-                          56037 <span className='ml-5'>Bat Gerel</span>
-                        </NavLink>
-                        <p className="mb-0 text-muted text-small w-15 w-xs-100">
-                          gerel@mail.com
-                        </p>
-                        <p className="mb-0 text-muted text-small w-15 w-xs-100">
-                          05/28/2020
-                        </p>
-                        <p className="mb-0 text-muted text-small w-15 w-xs-100">
-                          УШ67172808
-                        </p>
-                        <p className="mb-0 text-muted text-small w-15 w-xs-100">
-                          5011234567
-                        </p>
-                        <p className="mb-0 text-muted text-small w-15 w-xs-100">
-                          1.000.000₮
-                        </p>
-                        <p className="mb-0 text-muted text-small w-15 w-xs-100">
-                          91216778
-                        </p>
-                        <div className="w-15 w-xs-100">
-                          <span className="badge badge-pill badge-secondary registred w-85 w-xs-100">
-                            REGISTERED
-                          </span>
-                        </div>
-                      </div>
-
-                      <div className="custom-control custom-checkbox mb-1 align-self-center pr-4">
-                        <Input
-                          type="checkbox"
-                          className="custom-control-input"
-                        />
-                        {/* <span className="custom-control-label">&nbsp;</span> */}
-                      </div>
-                    </div>
-                  </div>
-
-                  <nav className="mt-4 mb-3">
-                    <ul className="pagination justify-content-center mb-0">
-                      <li className="page-item ">
-                        <NavLink className="page-link first" to="#">
-                          <i className="simple-icon-control-start" />
-                        </NavLink>
-                      </li>
-                      <li className="page-item ">
-                        <NavLink className="page-link prev" to="#">
-                          <i className="simple-icon-arrow-left" />
-                        </NavLink>
-                      </li>
-                      <li className="page-item active">
-                        <NavLink className="page-link" to="#">
-                          1
-                        </NavLink>
-                      </li>
-                      <li className="page-item ">
-                        <NavLink className="page-link" to="#">
-                          2
-                        </NavLink>
-                      </li>
-                      <li className="page-item">
-                        <NavLink className="page-link" to="#">
-                          3
-                        </NavLink>
-                      </li>
-                      <li className="page-item ">
-                        <NavLink
-                          className="page-link next"
-                          to="#"
-                          aria-label="Next"
-                        >
-                          <i className="simple-icon-arrow-right" />
-                        </NavLink>
-                      </li>
-                      <li className="page-item ">
-                        <NavLink className="page-link last" to="#">
-                          <i className="simple-icon-control-end" />
-                        </NavLink>
-                      </li>
-                    </ul>
-                  </nav>
-                </div>
-              </div>
-            </div>
-          </section>
-        </Colxx>
-      </Row>
-      <AddCustomer show={show} setShow={setShow} />
+      <div className="disable-text-selection">
+        <ListPageHeading
+          heading="menu.data-list"
+          displayMode={displayMode}
+          changeDisplayMode={setDisplayMode}
+          handleChangeSelectAll={handleChangeSelectAll}
+          changeOrderBy={(column) => {
+            setSelectedOrderOption(
+              orderOptions.find((x) => x.column === column)
+            );
+          }}
+          changePageSize={setSelectedPageSize}
+          selectedPageSize={selectedPageSize}
+          totalItemCount={totalItemCount}
+          selectedOrderOption={selectedOrderOption}
+          match={match}
+          startIndex={startIndex}
+          endIndex={endIndex}
+          selectedItemsLength={selectedItems ? selectedItems.length : 0}
+          itemsLength={items ? items.length : 0}
+          onSearchKey={(e) => {
+            if (e.key === 'Enter') {
+              setSearch(e.target.value.toLowerCase());
+            }
+          }}
+          orderOptions={orderOptions}
+          pageSizes={pageSizes}
+          toggleModal={() => setModalOpen(!modalOpen)}
+        />
+        <AddNewModal
+          modalOpen={modalOpen}
+          toggleModal={() => setModalOpen(!modalOpen)}
+          categories={categories}
+        />
+        <ListPageListing
+          items={items}
+          displayMode={displayMode}
+          selectedItems={selectedItems}
+          onCheckItem={onCheckItem}
+          currentPage={currentPage}
+          totalPage={totalPage}
+          onContextMenuClick={onContextMenuClick}
+          onContextMenu={onContextMenu}
+          onChangePage={setCurrentPage}
+        />
+      </div>
     </>
   );
 };
-export default CustromerList;
+
+export default DataListPages;

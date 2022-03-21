@@ -58,8 +58,6 @@ const EditSecondaryMaket = ({ match }) => {
               </div>
 
               <div className="col-lg-4 col-sm-4 col-md-4 col-12">
-
-
                 <p className="name">CEO</p>
                 <input
                   type="text"
@@ -80,12 +78,59 @@ const EditSecondaryMaket = ({ match }) => {
                   </option>
                 </select>
               </div>
+                <div className='col-lg-12 col-12'>
+                  <p className="name mt-3">About</p>
+                  <textarea className="about-textarea" name="active" />  
+                </div>
+            </div>
+            <div className='row'>
+              <div className='col-lg-4 col-sm-4 col-md-4 col-12'>
+                <p className='mt-3'>Bulls say 1 Title</p>
+                  <input type='text' className='input' name='BullsSayTitle' />
+              </div>
+              <div className='col-lg-4 col-sm-4 col-md-4 col-12'>
+                <p className='mt-3'>Bulls say 1 Author</p>
+                  <input type='text' className='input' name='BullsSayAuthor' />
+              </div>
+              <div className='col-lg-4 col-sm-4 col-md-4 col-12'>
+                <p className='mt-3'>Bulls Say 1 text</p>
+                  <input type='text' className='input' name='BullsSayText' />
+              </div>
+              
+              {/* second */}
+              <div className='col-lg-4 col-sm-4 col-md-4 col-12'>
+                <p className='mt-3'>Bulls say 2 Title</p>
+                  <input type='text' className='input' name='BullsSayTitle' />
+              </div>
+              <div className='col-lg-4 col-sm-4 col-md-4 col-12'>
+                <p className='mt-3'>Bulls say 2 Author</p>
+                  <input type='text' className='input' name='BullsSayAuthor' />
+              </div>
+              <div className='col-lg-4 col-sm-4 col-md-4 col-12'>
+                <p className='mt-3'>Bulls Say 2 text</p>
+                  <input type='text' className='input' name='BullsSayText' />
+              </div>
+
+              {/* third */}
+              <div className='col-lg-3 col-sm-3 col-md-3 col-12'>
+                <p className='mt-3'>Analysts Ratings</p>
+                  <input type='text' className='input' name='Analysts Ratings' />
+              </div>
+              <div className='col-lg-3 col-sm-3 col-md-3 col-12'>
+                <p className='mt-3'>Buy percent</p>
+                  <input type='text' className='input' name='Buy percent' />
+              </div>
+              <div className='col-lg-3 col-sm-3 col-md-3 col-12'>
+                <p className='mt-3'>Hold percent</p>
+                  <input type='text' className='input' name='Hold percent' />
+              </div>
+              <div className='col-lg-3 col-sm-3 col-md-3 col-12'>
+                <p className='mt-3'>Sell percent</p>
+                  <input type='text' className='input' name='Sell percent' />
+              </div>
               <button type="submit" className="save mt-3 ml-3">
                 SAVE CHANGES
               </button>
-            </div>
-            <div className="row">
-            <textarea id="froala-editor">Initialize the Froala WYSIWYG HTML Editor on a textarea.</textarea>
             </div>
           </div>
         </div>

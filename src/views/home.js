@@ -753,7 +753,7 @@ const Home = () => {
               <div className="row">
                 <div className="col-12" />
                 <div className="col-12 text-center">
-                  <p className="mb-0">2021 © ColoredStrategies</p>
+                  <p className="mb-0">2022 © Investo</p>
                 </div>
               </div>
             </div>

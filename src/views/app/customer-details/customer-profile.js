@@ -2,11 +2,13 @@ import React,{useState} from 'react';
 import { Row } from 'reactstrap';
 // import IntlMessages from 'helpers/IntlMessages';
 import { Colxx, Separator } from 'components/common/CustomBootstrap';
+import { adminRoot } from 'constants/defaultValues';
 import Breadcrumb from 'containers/navs/Breadcrumb';
 import { NavLink } from 'react-router-dom';
 import Profile from './profile';
 import CustomerIpoList from './customer-ipo';
 import CustomerTransation from './customer-transaction';
+
 // import { NavLink } from 'react-router-dom';
 
 
@@ -23,6 +25,7 @@ const CustomerProfile = ({ match }) => {
         <Colxx xxs="11">
           <Breadcrumb heading="Bat Gerel" match={match} />
           <div className="top-right-button-container">
+          <NavLink  to={`${adminRoot}/customer-menu/edit-profile`}>
             <button
               type="button"
 
@@ -30,7 +33,7 @@ const CustomerProfile = ({ match }) => {
             >
               Edit Profile
             </button>
-
+          </NavLink>
           </div>
       
         </Colxx>

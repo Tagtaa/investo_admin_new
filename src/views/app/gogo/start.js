@@ -5,7 +5,7 @@ import Breadcrumb from 'containers/navs/Breadcrumb';
 import { NavLink } from 'react-router-dom';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import Area from 'components/charts/Area';
-import Card from './dashboard-card/Card';
+import IconCardsCarousel from 'containers/dashboards/IconCardsCarousel';
 import { areaChartData } from '../../../data/charts';
 import Rectangle from '../../../assets/img/Dashboard/Rectangle.png';
 // import Chart from './dashboard-card/Chart';
@@ -18,29 +18,17 @@ const Start = ({ match }) => (
         <Separator className="mb-0" />
       </Colxx>
     </Row>
+    <Row>
+        <Colxx xxs="12" lg="12" xl="12" className="p-2">
+            <IconCardsCarousel />        
+        </Colxx>
+      </Row>
     <Row className="">
       <Colxx xxs="12" className="p-2">
         <section className="">
           <div className="container-fluid">
             <div className="row">
               <div className="col-lg-12 col-xl-12">
-                <div className="icon-cards-row ">
-                  <div className="glide dashboard-numbers ">
-                    <div className="glide__track" data-glide-el="track">
-                      <ul className="glide__slides">
-                        <Card />
-                        <Card />
-                        <Card />
-                        <Card />
-                        <Card />
-                        <Card />
-                        <Card />
-                        <Card />
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-
                 <div className="row">
                   <div className="col-md-12 mb-4">
                     <div className="card">

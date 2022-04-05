@@ -18,7 +18,7 @@ const AddDiposit=({show,setShow})=>{
             <div className="modal-dialog" role="document">
               <div className="modal-content">
                 <div className="modal-header">
-                  <h5 className="modal-title">Diposit Request</h5>
+                  <h5 className="modal-title">Deposit Request</h5>
                   <button type="button" className="close" aria-label="Close">
                     <span aria-hidden="true" onClick={()=>setShow(false)}> ×</span>
                   </button>
@@ -34,7 +34,7 @@ const AddDiposit=({show,setShow})=>{
                     Cancel
                   </button>
                   <button type="button" className="btn btn-primary">
-                    Diposit
+                    Deposit
                   </button>
                 </div>
               </div>

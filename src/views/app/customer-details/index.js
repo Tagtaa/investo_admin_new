@@ -2,6 +2,7 @@ import React, { Suspense } from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 
 const CustomerProfile = React.lazy(() => import('./customer-profile'));
+const CustomerEditProfile = React.lazy(() => import('./customer-edit-profile'));
 
 const CutomerDetailsPage = ({ match }) => (
   <Suspense fallback={<div className="loading" />}>
@@ -11,6 +12,11 @@ const CutomerDetailsPage = ({ match }) => (
         path={`${match.url}/profile`}
         exact
         render={(props) => <CustomerProfile {...props} />}
+      />
+      <Route
+        path={`${match.url}/edit-profile`}
+        exact
+        render={(props) => <CustomerEditProfile {...props} />}
       />
 
       <Redirect to="/error" />

@@ -24,7 +24,7 @@ const AccountList = ({ match }) => {
               onClick={() => setShow(true)}
               className="btn btn-primary btn-lg top-right-button mr-1"
             >
-              DIPOSIT
+              DEPOSIT
             </button>
             <div className="btn-group">
               <div className="btn btn-primary btn-lg pl-4 pr-0 check-button">

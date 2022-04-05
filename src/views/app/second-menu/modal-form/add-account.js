@@ -36,23 +36,38 @@ const AddAccount = ({ show, setShow }) => {
                   <Label className="mt-4">National ID</Label>
                   <Input type="text" className="form-controller" />
                    <Label className="mt-4">Customer type</Label>
-                    <p>---customer type select remain----</p>
+                   <select value="" className="form-controller form-control">
+                    <option value="" className="form-control">Mongolian Citizen</option>
+                  </select>
                   <Label className="mt-4">Phone number</Label>
                   <Input type="text" className="form-controller" />
                   <Label className="mt-4">Email</Label>
                   <Input type="text" className="form-controller" />
                   <Label className="mt-4">Registration Payment Method</Label>
-                  <p>---payment type select remain----</p>
+                  <select value="" className="form-controller form-control">
+                    <option value="" className="form-control">Credit Card</option>
+                  </select>
 
                   <Label className="mt-4">Whether to participate in foreign and domestic trade</Label>
-                  <p>---domestic trade type select remain----</p>
-                  <Label className="mt-4">Whether to participate in foreign and domestic trade</Label>
-                  <p>---domestic trade type select remain----</p>
-                  <Label className="mt-4">Whether to participate in foreign and domestic trade</Label>
-                  <p>---domestic trade type select remain----</p>
-                  <Label className="mt-4">Whether to participate in foreign and domestic trade</Label>
-                  <p>---domestic trade type select remain----</p>
-
+                  <select value="" className="form-controller form-control">
+                    <option value="" className="form-control">Domestic</option>
+                  </select>
+                  <Label className="mt-4">Foreign Trading Contract</Label>
+                  <Input type="file" name="file" className='form-control' />
+                  <Label className="mt-4">Domestic Trading Fee</Label>
+                  <select value="" className="form-controller form-control">
+                    <option value="" className="form-control">1.5%</option>
+                  </select>
+                  <Label className="mt-4">Government Bond Trading Fee</Label>
+                  <select value="" className="form-controller form-control">
+                    <option value="" className="form-control">1%</option>
+                  </select>
+                  <Label className="mt-4">Company Bond Trading Fee</Label>
+                  <select value="" className="form-controller form-control">
+                    <option value="" className="form-control">1%</option>
+                  </select>
+                  <Label className="mt-4">Content</Label>
+                  <Input type="file" name="file" className='form-control' />
                 </div>
                 <div className="modal-footer">
                   <button type="button" className="btn btn-outline-secondary">

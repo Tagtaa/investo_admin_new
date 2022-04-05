@@ -58,7 +58,7 @@ const data = [
     subs: [
       {
         icon: 'iconsminds-up',
-        label: 'menu.diposite',
+        label: 'menu.deposit',
         to: `${adminRoot}/request-menu/request`,
       },
       {

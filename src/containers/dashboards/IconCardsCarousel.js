@@ -10,13 +10,13 @@ const IconCardsCarousel = ({ className = 'icon-cards-row' }) => {
       <GlideComponent
         settings={{
           gap: 5,
-          perView: 4,
+          perView: 8,
           type: 'carousel',
           breakpoints: {
             320: { perView: 1 },
             576: { perView: 2 },
-            1600: { perView: 3 },
-            1800: { perView: 4 },
+            1600: { perView: 8 },
+            1800: { perView: 8 },
           },
           hideNav: true,
         }}
